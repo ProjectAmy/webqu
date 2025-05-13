@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote by Eko Wibowo</title>
+  <!-- Tailwind CSS via CDN (development mode) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-white via-green-100 to-yellow-300 flex items-center justify-center min-h-screen">
+  <div class="bg-white rounded-2xl shadow-xl p-8 max-w-md text-center">
+    <div class="mb-6 flex flex-col items-center">
+      <img src="https://i.pravatar.cc/100?img=12" alt="Pak Eko" class="w-16 h-16 rounded-full shadow-md" />
+    </div>
+    <p id="quote" class="text-lg font-medium text-gray-700 italic">
+      "Luangkan waktumu dan jangan menunggu waktu luang"
+    </p>
+    <p id="author" class="mt-4 text-sm text-gray-500">– by Eko Wibowo</p>
+    <div class="flex flex-col items-center mt-6 space-y-2">
+      <div class="flex justify-center space-x-4">
+        <button id="prevBtn" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button id="nextBtn" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+      <button id="addBtn" class="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-colors">Add</button>
+    </div>
+
+    <!-- Modal Pop Up Add Quote -->
+    <div id="modalSaveQuote" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+      <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-xs">
+        <h2 class="text-lg font-semibold mb-4">Tambah Quote Baru</h2>
+        <form id="formAddQuote" class="space-y-3">
+          <input id="inputQuote" type="text" placeholder="Quote" class="w-full px-3 py-2 border rounded focus:outline-none focus:ring" required />
+          <input id="inputAuthor" type="text" placeholder="Author" class="w-full px-3 py-2 border rounded focus:outline-none focus:ring" required />
+          <div class="flex justify-end space-x-2">
+            <button type="button" id="cancelAddBtn" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Cancel</button>
+            <button type="submit" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Array of quotes
+    let quotes = [
+      {
+        quote: "Luangkan waktumu dan jangan menunggu waktu luang",
+        author: " - by Eko Wibowo"
+      },
+      {
+        quote: "Seandainya dulu ada AI maka saya tidak sebotak ini",
+        author: " - by Eko Wibowo"
+      }
+    ];
+
+    // Get elements
+    const quote = document.getElementById("quote");
+    const author = document.getElementById("author");
+    let currentQuoteIndex = 0;
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    // Function to show quote
+    function showQuote(index) {
+      quote.innerText = `"${quotes[index].quote}"`;
+      author.innerText = quotes[index].author;
+    }
+
+    // Add event listeners
+    prevBtn.addEventListener('click', () => {
+      currentQuoteIndex = (currentQuoteIndex - 1 + quotes.length) % quotes.length;
+      showQuote(currentQuoteIndex);
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+      showQuote(currentQuoteIndex);
+    });
+
+    // Show first quote on load
+    showQuote(currentQuoteIndex);
+
+    // Modal logic
+    const addBtn = document.getElementById('addBtn');
+    const modalSaveQuote = document.getElementById('modalSaveQuote');
+    const cancelAddBtn = document.getElementById('cancelAddBtn');
+    const formAddQuote = document.getElementById('formAddQuote');
+    const inputQuote = document.getElementById('inputQuote');
+    const inputAuthor = document.getElementById('inputAuthor');
+
+    addBtn.addEventListener('click', () => {
+      modalSaveQuote.classList.remove('hidden');
+      inputQuote.value = '';
+      inputAuthor.value = '';
+      inputQuote.focus();
+    });
+
+    cancelAddBtn.addEventListener('click', () => {
+      modalSaveQuote.classList.add('hidden');
+    });
+
+    formAddQuote.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newQuote = inputQuote.value.trim();
+      const newAuthor = inputAuthor.value.trim();
+      if (newQuote && newAuthor) {
+        quotes.push({ quote: newQuote, author: `- by ${newAuthor}` });
+        currentQuoteIndex = quotes.length - 1;
+        showQuote(currentQuoteIndex);
+      }
+      modalSaveQuote.classList.add('hidden');
+    });
+
+    // Close modal when click outside
+    modalSaveQuote.addEventListener('mousedown', function(e) {
+      if (e.target === modalSaveQuote) {
+        modalSaveQuote.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
